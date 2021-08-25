@@ -5,8 +5,8 @@ const date = require(`${__dirname}/date.js`);
 
 const port = process.env.PORT || 3000;
 
-const items = ['Buy Food', 'Cook Food', 'Eat Food'];
-const workItems = ['Watch JavaScript Tutorial', 'Design a jewelery website'];
+const items = [];
+const workItems = [];
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
