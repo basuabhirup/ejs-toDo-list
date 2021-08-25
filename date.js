@@ -1,33 +1,24 @@
-module.exports.getTodayFull = getTodayFull;
-module.exports.getToday = getToday;
-module.exports.getDate = getDate;
-
-
-
-function getTodayFull() {
+exports.getTodayFull = function () {
   const options = {
     weekday: 'long',
     day: 'numeric',
     month: 'long',
     year: 'numeric'
   }
-  let today = new Date().toLocaleDateString('en-US', options);
-  return today;
+  return new Date().toLocaleDateString('en-US', options);
 }
 
-function getToday() {
+exports.getToday = function () {
   const options = {
     weekday: 'long',
   }
-  let today = new Date().toLocaleDateString('en-US', options);
-  return today;
+  return new Date().toLocaleDateString('en-US', options);
 }
 
-function getDate() {
+exports.getDate = function () {
   const options = {
     day: 'numeric',
     month: 'long',
   }
-  let today = new Date().toLocaleDateString('en-US', options);
-  return today;
+  return new Date().toLocaleDateString('en-US', options);
 }

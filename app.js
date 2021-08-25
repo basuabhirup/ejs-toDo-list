@@ -5,15 +5,15 @@ const date = require(`${__dirname}/date.js`);
 
 const port = process.env.PORT || 3000;
 
-let items = ['Buy Food', 'Cook Food', 'Eat Food'];
-let workItems = ['Watch JavaScript Tutorial', 'Design a jewelery website'];
+const items = ['Buy Food', 'Cook Food', 'Eat Food'];
+const workItems = ['Watch JavaScript Tutorial', 'Design a jewelery website'];
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
 
 app.get("/", (req, res) => {
-  let day = date.getTodayFull();
+  const day = date.getTodayFull();
   res.render("list", {title: day, items: items});
 });
 
@@ -26,7 +26,7 @@ app.get("/about", (req, res) => {
 });
 
 app.post("/", (req,res) => {
-  let item = req.body.item;
+  const item = req.body.item;
   if (req.body.list === "Work") {
     workItems.push(item);
     res.redirect("/work");
