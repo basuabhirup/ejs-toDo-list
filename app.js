@@ -3,22 +3,29 @@ const app = express();
 const bodyParser = require("body-parser");
 const port = process.env.PORT || 3000;
 
-app.set('view engine', 'ejs')
+let items = ['Buy Food', 'Cook Food', 'Eat Food'];
+
+app.set('view engine', 'ejs');
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(express.static("public"));
 
 app.get("/", (req, res) => {
-  const daysInWord = {
-    0: "Sunday",
-    1: "Monday",
-    2: "Tuesday",
-    3: "Wednessday",
-    4: "Thursday",
-    5: "Friday",
-    6: "Saturday"
+  const options = {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
   }
-  let today = new Date().getDay();
-  let day = daysInWord[today];
-  res.render("list", {day: day});
+  let today = new Date();
+  let day = today.toLocaleDateString('en-US', options);
+  res.render("list", {day: day, items: items});
 });
+
+app.post("/", (req,res) => {
+  let item = req.body.item;
+  items.push(item);
+  res.redirect("/");
+})
 
 app.listen(port, () => {
   console.log(`Server started on port ${port}.`);
