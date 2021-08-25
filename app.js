@@ -26,6 +26,10 @@ app.get("/work", (req, res) => {
   res.render("list", {title: "Work List", items: workItems});
 });
 
+app.get("/about", (req, res) => {
+  res.render("about", {title: "About"});
+});
+
 app.post("/", (req,res) => {
   let item = req.body.item;
   if (req.body.list === "Work") {
@@ -34,7 +38,7 @@ app.post("/", (req,res) => {
   } else {
     items.push(item);
     res.redirect("/");
-  }  
+  }
 })
 
 app.listen(port, () => {

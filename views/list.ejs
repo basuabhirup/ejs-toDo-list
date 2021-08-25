@@ -1,29 +1,19 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>To Do List</title>
-    <link rel="stylesheet" href="css/styles.css">
-  </head>
-  <body>
+<%- include("header"); -%>
+  <div class="box" id="heading">
+    <h1><%= title %></h1>
+  </div>
 
-    <div class="box" id="heading">
-      <h1><%= title %></h1>
-    </div>
+  <div class="box">
+      <% items.forEach(item => { %>
+        <div class="item">
+          <input type="checkbox" value=""><p><%= item %></p>
+        </div>
 
-    <div class="box">
-        <% items.forEach(item => { %>
-          <div class="item">
-            <input type="checkbox" value=""><p><%= item %></p>
-          </div>
+      <% }) %>
 
-        <% }) %>
-
-        <form class="item" action="/" method="post">
-          <input type="text" name="item" placeholder="Add Task" autocomplete="off">
-          <button type="submit" name="list" value=<%= title %>>+</button>
-        </form>
-    </div>
-
-  </body>
-</html>
+      <form class="item" action="/" method="post">
+        <input type="text" name="item" placeholder="Add Task" autocomplete="off">
+        <button type="submit" name="list" value=<%= title %>>+</button>
+      </form>
+  </div>
+<%- include("footer"); -%>
