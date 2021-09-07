@@ -13,6 +13,7 @@ app.use(express.static("public"));
 // Create a new mongoDB database with mongoose:
 mongoose.connect('mongodb://localhost:27017/toDoListDB');
 
+// Create an Item collection to store default items:
 const itemSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -29,6 +30,13 @@ const repeat = new Item({name: "Repeat"});
 
 const defaultItems = [eat, sleep, code, repeat];
 
+// Create a List collection to stor different lists.
+const listSchema = new mongoose.Schema({
+  name: String,
+  items: [itemSchema]
+})
+
+const List = mongoose.model('List', listSchema);
 
 // Handle 'GET' requests from client:
 app.get("/", (req, res) => {
@@ -45,18 +53,36 @@ app.get("/", (req, res) => {
         	} else {
         		console.log("Successfully saved the default items to toDoListDB.")
         	}
+          res.redirect("/");
         })
-        res.redirect("/");
+        setTimeout( () => res.redirect("/"), 5000);
       } else {
-        res.render("list", { title: "To Do List", items: items });
+        res.render("list", { title: "To-Do List", items: items });
       }
   	}
   });
 
 });
 
-app.get("/work", (req, res) => {
-  res.render("list", {title: "Work List", items: workItems});
+app.get("/:customName", (req, res) => {
+  const listName = req.params.customName;
+  List.findOne({name: listName}, (err, list) => {
+    if (err) {
+      console.log(err);
+    } else {
+      if (!list) {
+        const newList = new List({
+          name: listName,
+          items: [{name: "Add tasks here"}]
+        })
+        newList.save();
+        setTimeout( () => res.redirect(`/${listName}`), 5000);
+      } else {
+        res.render("list", {title: `${listName} List`, items: list.items});
+      }
+    }
+  })
+
 });
 
 app.get("/about", (req, res) => {
@@ -66,14 +92,21 @@ app.get("/about", (req, res) => {
 
 // Handle 'POST' requests from client:
 app.post("/", (req,res) => {
+  const listName = req.body.list;
   const itemName = req.body.item;
-  if (req.body.list === "Work") {
-    workItems.push(item);
-    res.redirect("/work");
-  } else {
-    const item = new Item({name: itemName});
+  const item = new Item({name: itemName});
+
+  if(listName === 'To-Do') {
     item.save();
     res.redirect("/");
+  } else {
+    List.findOne({name: listName}, (err, list) => {
+      if(!err) {
+        list.items.push(item);
+        list.save();
+        res.redirect(`/${listName}`);
+      }
+    })
   }
 })
 
@@ -88,7 +121,6 @@ app.post("/delete", (req,res) => {
     }
   })
 });
-
 
 // Enable client to listen to the port:
 app.listen(port, () => {
