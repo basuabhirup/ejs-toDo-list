@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require('mongoose');
+const _ = require('lodash');
 // const date = require(`${__dirname}/date.js`);
 
 const port = process.env.PORT || 3000;
@@ -51,11 +52,10 @@ app.get("/", (req, res) => {
          if (err) {
         		console.log(err);
         	} else {
-        		console.log("Successfully saved the default items to toDoListDB.")
+        		console.log("Successfully saved the default items to toDoListDB.");
+            res.redirect("/");
         	}
-          res.redirect("/");
         })
-        setTimeout( () => res.redirect("/"), 5000);
       } else {
         res.render("list", { title: "To-Do List", items: items });
       }
@@ -65,7 +65,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/:customName", (req, res) => {
-  const listName = req.params.customName;
+  const listName = _.startCase(_.kebabCase(req.params.customName));
   List.findOne({name: listName}, (err, list) => {
     if (err) {
       console.log(err);
@@ -76,13 +76,12 @@ app.get("/:customName", (req, res) => {
           items: []
         })
         newList.save();
-        setTimeout( () => res.redirect(`/${listName}`), 5000);
+        setTimeout( () => res.redirect(`/${_.kebabCase(listName)}`), 5000);
       } else {
         res.render("list", {title: `${listName} List`, items: list.items});
       }
     }
   })
-
 });
 
 app.get("/about", (req, res) => {
@@ -96,15 +95,16 @@ app.post("/", (req,res) => {
   const itemName = req.body.item;
   const item = new Item({name: itemName});
 
-  if(listName === 'To-Do') {
+  if(listName === 'To-Do List') {
     item.save();
     res.redirect("/");
   } else {
-    List.findOne({name: listName}, (err, list) => {
+    const name = listName.substring(0, listName.length - 5);
+    List.findOne({name: name}, (err, list) => {
       if(!err) {
         list.items.push(item);
         list.save();
-        res.redirect(`/${listName}`);
+        res.redirect(`/${_.kebabCase(name)}`);
       }
     })
   }
@@ -114,7 +114,7 @@ app.post("/delete", (req,res) => {
   const itemID = req.body.itemID;
   const listName = req.body.list;
 
-  if(listName === 'To-Do') {
+  if(listName === 'To-Do List') {
     Item.findByIdAndRemove(itemID, err => {
       if(err) {
         console.log(err);
@@ -124,9 +124,10 @@ app.post("/delete", (req,res) => {
       }
     })
   } else {
-    List.findOneAndUpdate({name: listName}, {$pull: {items: {_id: itemID}}}, (err, list) => {
+    const name = listName.substring(0, listName.length - 5);
+    List.findOneAndUpdate({name: name}, {$pull: {items: {_id: itemID}}}, (err, list) => {
       if(!err) {
-        res.redirect(`/${listName}`);
+        res.redirect(`/${_.kebabCase(name)}`);
       }
     })
   }

@@ -14,7 +14,7 @@
                 <%= item.name %>
               </p>
           </div>
-          <input type="hidden" name="list" value=<%= title %>></input>
+          <input type="hidden" name="list" value="<%= title %>"></input>
         </form>
 
 
@@ -22,7 +22,7 @@
 
       <form class="item" action="/" method="post">
         <input type="text" name="item" placeholder="Add Task" autocomplete="off">
-        <button type="submit" name="list" value=<%= title %>>+</button>
+        <button type="submit" name="list" value="<%= title %>">+</button>
       </form>
   </div>
 <%- include("footer"); -%>
