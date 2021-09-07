@@ -73,7 +73,7 @@ app.get("/:customName", (req, res) => {
       if (!list) {
         const newList = new List({
           name: listName,
-          items: [{name: "Add tasks here"}]
+          items: []
         })
         newList.save();
         setTimeout( () => res.redirect(`/${listName}`), 5000);
@@ -112,14 +112,24 @@ app.post("/", (req,res) => {
 
 app.post("/delete", (req,res) => {
   const itemID = req.body.itemID;
-  Item.findByIdAndRemove(itemID, err => {
-    if(err) {
-      console.log(err);
-    } else {
-      console.log("Successfully deleted the checked item from the database.");
-      res.redirect('/');
-    }
-  })
+  const listName = req.body.list;
+
+  if(listName === 'To-Do') {
+    Item.findByIdAndRemove(itemID, err => {
+      if(err) {
+        console.log(err);
+      } else {
+        console.log("Successfully deleted the checked item from the database.");
+        res.redirect('/');
+      }
+    })
+  } else {
+    List.findOneAndUpdate({name: listName}, {$pull: {items: {_id: itemID}}}, (err, list) => {
+      if(!err) {
+        res.redirect(`/${listName}`);
+      }
+    })
+  }
 });
 
 // Enable client to listen to the port:
