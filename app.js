@@ -13,7 +13,12 @@ app.use(express.static("public"));
 // Create a new mongoDB database with mongoose:
 mongoose.connect('mongodb://localhost:27017/toDoListDB');
 
-const itemSchema = new mongoose.Schema({ name: String });
+const itemSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: [true, "You must specify a name of task to add it into the database."]
+  }
+});
 const Item = mongoose.model('Item', itemSchema);
 
 // Create 4 default items for the items collection:
@@ -71,6 +76,18 @@ app.post("/", (req,res) => {
     res.redirect("/");
   }
 })
+
+app.post("/delete", (req,res) => {
+  const itemID = req.body.itemID;
+  Item.findByIdAndRemove(itemID, err => {
+    if(err) {
+      console.log(err);
+    } else {
+      console.log("Successfully deleted the checked item from the database.");
+      res.redirect('/');
+    }
+  })
+});
 
 
 // Enable client to listen to the port:
