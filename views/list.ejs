@@ -1,4 +1,4 @@
-<%- include("header"); -%>
+<%- include("partials/header"); -%>
   <div class="box" id="heading">
     <h1><%= title %></h1>
   </div>
@@ -22,7 +22,8 @@
 
       <form class="item" action="/" method="post">
         <input type="text" name="item" placeholder="Add Task" autocomplete="off">
-        <button type="submit" name="list" value="<%= title %>">+</button>
+        <button type="submit" name="list" value="<%= title %>" disabled>+</button>
       </form>
   </div>
-<%- include("footer"); -%>
+  <script src="scripts.js" charset="utf-8"></script>
+<%- include("partials/footer"); -%>

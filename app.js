@@ -61,7 +61,10 @@ app.get("/", (req, res) => {
       }
   	}
   });
+});
 
+app.get("/about", (req, res) => {
+  res.render("about", {title: "About"});
 });
 
 app.get("/:customName", (req, res) => {
@@ -82,10 +85,6 @@ app.get("/:customName", (req, res) => {
       }
     }
   })
-});
-
-app.get("/about", (req, res) => {
-  res.render("about", {title: "About"});
 });
 
 
