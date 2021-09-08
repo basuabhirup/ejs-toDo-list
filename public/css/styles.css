@@ -72,6 +72,13 @@ button {
   border-width: 0;
 }
 
+button:hover {
+  cursor: pointer;
+  font-size: 36px;
+  font-weight: bolder;
+  border: 1.5px solid #A683E3;
+}
+
 input[type="text"] {
   text-align: center;
   height: 60px;
