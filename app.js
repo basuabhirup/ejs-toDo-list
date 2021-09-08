@@ -78,8 +78,11 @@ app.get("/:customName", (req, res) => {
           name: listName,
           items: []
         })
-        newList.save();
-        setTimeout( () => res.redirect(`/${_.kebabCase(listName)}`), 5000);
+        newList.save( err => {
+          if(!err) {
+            res.redirect(`/${_.kebabCase(listName)}`);
+          }
+        })
       } else {
         res.render("list", {title: `${listName} List`, items: list.items});
       }
@@ -102,8 +105,11 @@ app.post("/", (req,res) => {
     List.findOne({name: name}, (err, list) => {
       if(!err) {
         list.items.push(item);
-        list.save();
-        res.redirect(`/${_.kebabCase(name)}`);
+        list.save( err => {
+          if(!err) {
+            res.redirect(`/${_.kebabCase(name)}`);
+          }
+        })
       }
     })
   }
