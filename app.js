@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require('mongoose');
@@ -12,7 +13,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
 
 // Create a new mongoDB database with mongoose:
-mongoose.connect('mongodb://localhost:27017/toDoListDB');
+mongoose.connect(`mongodb+srv://basu_abhirup:${process.env.DB_PASS}@cluster0.m5s9h.mongodb.net/toDoListDB`);
 
 // Create an Item collection to store default items:
 const itemSchema = new mongoose.Schema({
@@ -52,7 +53,6 @@ app.get("/", (req, res) => {
          if (err) {
         		console.log(err);
         	} else {
-        		console.log("Successfully saved the default items to toDoListDB.");
             res.redirect("/");
         	}
         })
@@ -119,7 +119,6 @@ app.post("/delete", (req,res) => {
       if(err) {
         console.log(err);
       } else {
-        console.log("Successfully deleted the checked item from the database.");
         res.redirect('/');
       }
     })
